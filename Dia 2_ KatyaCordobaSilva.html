@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Día 2 — Nuestro Juego</title>
+  <style>
+    :root{
+      --bg1:#0f1021;
+      --bg2:#2b2d42;
+      --accent:#ff477e;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --ok:#065f46;
+      --error:#b91c1c;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background:radial-gradient(1200px 600px at 20% 0%,var(--bg2),transparent),
+                 radial-gradient(1200px 700px at 100% 0%,#1f2937,transparent),
+                 linear-gradient(135deg,var(--bg1),#1a1b2e 60%);
+      color:var(--text);
+      display:flex;align-items:center;justify-content:center;
+      height:100vh;padding:24px;
+    }
+    .card{
+      width:100%;max-width:720px;background:linear-gradient(180deg,#fff,#f9fafb 60%,#fff);
+      border-radius:20px;padding:22px;
+      box-shadow:0 10px 25px rgba(0,0,0,.12),0 2px 8px rgba(0,0,0,.06);
+      position:relative;overflow:hidden;
+      transition:opacity .6s ease,transform .6s ease;
+    }
+    .hidden{opacity:0;transform:scale(.96);pointer-events:none;position:absolute;inset:0;}
+    .show{opacity:1;transform:scale(1);pointer-events:auto;position:relative;}
+    h1{font-size:clamp(26px,4.8vw,36px);color:#111827;margin-bottom:8px}
+    p{line-height:1.6;margin-bottom:12px}
+    button{
+      appearance:none;border:0;border-radius:12px;padding:14px 18px;font-weight:800;
+      background:linear-gradient(90deg,var(--accent),#ff6b9a);color:#fff;
+      box-shadow:0 8px 16px rgba(255,71,126,.35);cursor:pointer;
+      width:100%;margin-top:16px;font-size:16px;transition:transform .1s ease;
+    }
+    button:active{transform:scale(.98)}
+    .options{display:grid;gap:10px;margin-top:10px}
+    input[type=radio]{display:none}
+    .opt{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d1d5db;
+         border-radius:14px;padding:14px;cursor:pointer;transition:border-color .2s,box-shadow .2s}
+    .opt .dot{width:18px;height:18px;border-radius:50%;border:2px solid #9ca3af;position:relative}
+    input[type=radio]:checked + label .opt{border-color:#f472b6;box-shadow:0 0 0 6px rgba(244,114,182,.15)}
+    input[type=radio]:checked + label .dot{border-color:#f472b6}
+    input[type=radio]:checked + label .dot::after{content:'';position:absolute;inset:3px;
+      background:linear-gradient(90deg,var(--accent),#ff6b9a);border-radius:50%}
+    .result,.error{display:none;margin-top:14px;border-radius:16px;padding:16px;text-align:center}
+    .result{border:1px solid #d1fae5;background:#ecfdf5;color:var(--ok)}
+    .error{border:1px solid #fecaca;background:#fef2f2;color:var(--error)}
+    .big{font-size:clamp(42px,10vw,72px);font-weight:900;line-height:1;margin-top:10px}
+    .footer{margin-top:18px;display:flex;justify-content:space-between;font-size:12px;color:#6b7280}
+  </style>
+</head>
+<body>
+  <main class="card show" id="intro">
+    <h1>Hola, mi amor 💖</h1>
+    <p>Hoy te ves preciosa, como siempre... pero hoy un poquito más 🌸</p>
+    <p>Gracias por hacer de cada día algo especial, por tus risas, tus locuras y por hacerme sentir tan afortunado de tenerte.</p>
+    <p>Ahora, ¿lista para poner a prueba cuánto me conoces? 😏</p>
+    <button onclick="goToQuiz()">Continuar 💘</button>
+  </main>
+
+  <main class="card hidden" id="quiz">
+    <h1>Día 2 — Nuestro Juego</h1>
+    <p class="subtitle" style="color:var(--muted)">Contesta las 5 preguntas. Si aciertas todas, tendrás tu número del día. Si fallas... ponte buza o te doy un sape 😝</p>
+
+    <form id="quizForm">
+      <label><strong>1️⃣ ¿Cuál es la comida favorita de Hugo?</strong></label>
+      <div class="options">
+        <input type="radio" name="q1" id="q1a"><label for="q1a"><div class="opt"><span class="dot"></span>Hamburguesas</div></label>
+        <input type="radio" name="q1" id="q1b"><label for="q1b"><div class="opt"><span class="dot"></span>Carne fina</div></label>
+        <input type="radio" name="q1" id="q1c"><label for="q1c"><div class="opt"><span class="dot"></span>Mariscos</div></label>
+        <input type="radio" name="q1" id="q1d" data-correct><label for="q1d"><div class="opt"><span class="dot"></span>Pastas</div></label>
+      </div>
+
+      <label><strong>2️⃣ ¿Qué prefiere tu novio?</strong></label>
+      <div class="options">
+        <input type="radio" name="q2" id="q2a"><label for="q2a"><div class="opt"><span class="dot"></span>Ir a una fiesta</div></label>
+        <input type="radio" name="q2" id="q2b" data-correct><label for="q2b"><div class="opt"><span class="dot"></span>Ver una película</div></label>
+        <input type="radio" name="q2" id="q2c"><label for="q2c"><div class="opt"><span class="dot"></span>Salir a comer</div></label>
+        <input type="radio" name="q2" id="q2d"><label for="q2d"><div class="opt"><span class="dot"></span>Estar acostados viendo TikToks</div></label>
+      </div>
+
+      <label><strong>3️⃣ ¿Qué prefiere Hugo en tema afectivo?</strong></label>
+      <div class="options">
+        <input type="radio" name="q3" id="q3a"><label for="q3a"><div class="opt"><span class="dot"></span>Abrazos</div></label>
+        <input type="radio" name="q3" id="q3b"><label for="q3b"><div class="opt"><span class="dot"></span>Besos</div></label>
+        <input type="radio" name="q3" id="q3c" data-correct><label for="q3c"><div class="opt"><span class="dot"></span>Palabras de cariño</div></label>
+        <input type="radio" name="q3" id="q3d"><label for="q3d"><div class="opt"><span class="dot"></span>Tiempo</div></label>
+      </div>
+
+      <label><strong>4️⃣ ¿En qué lugar llevabas vestido blanco y él sobrecamisa roja?</strong></label>
+      <div class="options">
+        <input type="radio" name="q4" id="q4a"><label for="q4a"><div class="opt"><span class="dot"></span>Ling Ling</div></label>
+        <input type="radio" name="q4" id="q4b"><label for="q4b"><div class="opt"><span class="dot"></span>La Cletta</div></label>
+        <input type="radio" name="q4" id="q4c" data-correct><label for="q4c"><div class="opt"><span class="dot"></span>Osteria del Becco</div></label>
+        <input type="radio" name="q4" id="q4d"><label for="q4d"><div class="opt"><span class="dot"></span>Nolita</div></label>
+      </div>
+
+      <label><strong>5️⃣ ¿Cuál es el regalo que Hugo te ha dado más?</strong></label>
+      <div class="options">
+        <input type="radio" name="q5" id="q5a" data-correct><label for="q5a"><div class="opt"><span class="dot"></span>Flores</div></label>
+        <input type="radio" name="q5" id="q5b"><label for="q5b"><div class="opt"><span class="dot"></span>Accesorios</div></label>
+        <input type="radio" name="q5" id="q5c"><label for="q5c"><div class="opt"><span class="dot"></span>Chocolates</div></label>
+        <input type="radio" name="q5" id="q5d"><label for="q5d"><div class="opt"><span class="dot"></span>Viajes</div></label>
+      </div>
+
+      <button type="button" onclick="checkQuiz()">Comprobar respuestas 💘</button>
+      <div id="quizError" class="error">Ponte buza 😝 o te doy un sape jiji, revisa tus respuestas.</div>
+    </form>
+  </main>
+
+  <main class="card hidden" id="final">
+    <h1>💞 ¡Felicidades amor!</h1>
+    <p>Sabes todo de mí y eso me encanta.  
+    Cada respuesta tuya me recordó por qué eres la indicada 💘</p>
+    <p>Tu número del día es:</p>
+    <div class="big">9</div>
+    <p style="margin-top:20px;">Guárdalo bien, pronto sabrás por qué 😉</p>
+    <button onclick="goToIntro()">Volver a leer 💌</button>
+  </main>
+
+  <script>
+    const intro=document.getElementById('intro');
+    const quiz=document.getElementById('quiz');
+    const final=document.getElementById('final');
+    function goToQuiz(){
+      intro.classList.replace('show','hidden');
+      setTimeout(()=>quiz.classList.replace('hidden','show'),300);
+    }
+    function goToIntro(){
+      final.classList.replace('show','hidden');
+      setTimeout(()=>intro.classList.replace('hidden','show'),300);
+    }
+    function checkQuiz(){
+      const correct=document.querySelectorAll('[data-correct]');
+      let allCorrect=true;
+      correct.forEach(c=>{
+        const group=c.name;
+        if(!document.querySelector('input[name="'+group+'"][data-correct]:checked')){
+          allCorrect=false;
+        }
+      });
+      if(allCorrect){
+        quiz.classList.replace('show','hidden');
+        setTimeout(()=>final.classList.replace('hidden','show'),300);
+      }else{
+        document.getElementById('quizError').style.display='block';
+      }
+    }
+  </script>
+</body>
+</html>
