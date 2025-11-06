@@ -21,8 +21,13 @@
                  radial-gradient(1200px 700px at 100% 0%,#1f2937,transparent),
                  linear-gradient(135deg,var(--bg1),#1a1b2e 60%);
       color:var(--text);
-      display:flex;align-items:center;justify-content:center;
-      height:100vh;padding:24px;
+      display:flex;
+      align-items:flex-start;      /* 👈 inicia desde arriba */
+      justify-content:center;
+      min-height:100vh;            /* 👈 asegura scroll si hay más contenido */
+      padding:24px;
+      overflow-y:auto;             /* 👈 permite desplazarse */
+      -webkit-overflow-scrolling:touch; /* 👈 scroll suave iPhone */
     }
     .card{
       width:100%;max-width:720px;background:linear-gradient(180deg,#fff,#f9fafb 60%,#fff);
@@ -59,6 +64,7 @@
   </style>
 </head>
 <body>
+  <!-- Pantalla de bienvenida -->
   <main class="card show" id="intro">
     <h1>Hola, mi amor 💖</h1>
     <p>Hoy te ves preciosa, como siempre... pero hoy un poquito más 🌸</p>
@@ -67,6 +73,7 @@
     <button onclick="goToQuiz()">Continuar 💘</button>
   </main>
 
+  <!-- Pantalla del quiz -->
   <main class="card hidden" id="quiz">
     <h1>Día 2 — Nuestro Juego</h1>
     <p class="subtitle" style="color:var(--muted)">Contesta las 5 preguntas. Si aciertas todas, tendrás tu número del día. Si fallas... ponte buza o te doy un sape 😝</p>
@@ -117,10 +124,10 @@
     </form>
   </main>
 
+  <!-- Pantalla final -->
   <main class="card hidden" id="final">
     <h1>💞 ¡Felicidades amor!</h1>
-    <p>Sabes todo de mí y eso me encanta.  
-    Cada respuesta tuya me recordó por qué eres la indicada 💘</p>
+    <p>Sabes todo de mí y eso me encanta.<br>Cada respuesta tuya me recordó por qué eres la indicada 💘</p>
     <p>Tu número del día es:</p>
     <div class="big">9</div>
     <p style="margin-top:20px;">Guárdalo bien, pronto sabrás por qué 😉</p>
@@ -134,10 +141,12 @@
     function goToQuiz(){
       intro.classList.replace('show','hidden');
       setTimeout(()=>quiz.classList.replace('hidden','show'),300);
+      window.scrollTo(0,0);
     }
     function goToIntro(){
       final.classList.replace('show','hidden');
       setTimeout(()=>intro.classList.replace('hidden','show'),300);
+      window.scrollTo(0,0);
     }
     function checkQuiz(){
       const correct=document.querySelectorAll('[data-correct]');
@@ -151,8 +160,10 @@
       if(allCorrect){
         quiz.classList.replace('show','hidden');
         setTimeout(()=>final.classList.replace('hidden','show'),300);
+        window.scrollTo(0,0);
       }else{
         document.getElementById('quizError').style.display='block';
+        window.scrollTo(0,document.body.scrollHeight);
       }
     }
   </script>
